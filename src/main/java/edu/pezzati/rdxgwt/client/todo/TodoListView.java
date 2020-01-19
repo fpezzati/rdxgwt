@@ -45,6 +45,7 @@ public class TodoListView implements IsWidget {
 	}
 	
 	public void refresh(TodoListModel model) {
+		todoTable.clear();
 		for(Todo todo : model.getTodoList()) {
 			TextBox mementoField = new TextBox();
 			mementoField.addChangeHandler(getMementoFieldChangeHandler());
