@@ -1,10 +1,14 @@
 package edu.pezzati.rdxgwt.client.todo;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -16,6 +20,15 @@ import com.google.gwt.user.client.ui.Widget;
 public class TodoListView implements IsWidget {
 
 	private FlexTable todoTable;
+	/**
+	 * Helps finding which {@link Todo} object was edited in the {@link TextBox} widget.
+	 */
+	private Map<TextBox, Todo> todoTextField;
+	private EventBus eventBus;
+	
+	public TodoListView() {
+		todoTextField = new HashMap<>();
+	}
 
 	@Override
 	public Widget asWidget() {
@@ -23,7 +36,7 @@ public class TodoListView implements IsWidget {
 		todoTable = new FlexTable();
 		todoTable.setText(0, 0, "");
 		TextBox mementoField = new TextBox();
-		mementoField.addChangeHandler(getMementoFieldChangeHandler());
+		mementoField.addValueChangeHandler(getMementoFieldChangeHandler());
 		Button removeButton = new Button("-");
 		removeButton.addClickHandler(getRemoveButtonClickHandler());
 		todoTable.setWidget(0, 0, mementoField);
@@ -46,15 +59,17 @@ public class TodoListView implements IsWidget {
 	
 	public void refresh(TodoListModel model) {
 		todoTable.clear();
+		todoTextField.clear();
 		for(Todo todo : model.getTodoList()) {
 			TextBox mementoField = new TextBox();
-			mementoField.addChangeHandler(getMementoFieldChangeHandler());
+			mementoField.addValueChangeHandler(getMementoFieldChangeHandler());
 			Button removeButton = new Button("-");
 			removeButton.addClickHandler(getRemoveButtonClickHandler());
 			mementoField.setValue(todo.getMemento());
 			todoTable.insertRow(todoTable.getRowCount());
 			todoTable.setWidget(todoTable.getRowCount(), 0, mementoField);
 			todoTable.setWidget(todoTable.getRowCount(), 1, removeButton);
+			todoTextField.put(mementoField, todo);
 		}
 	}
 	
@@ -76,11 +91,12 @@ public class TodoListView implements IsWidget {
 		};
 	}
 
-	private ChangeHandler getMementoFieldChangeHandler() {
-		return new ChangeHandler() {
+	private ValueChangeHandler<String> getMementoFieldChangeHandler() {
+		return new ValueChangeHandler<String>() {
 			@Override
-			public void onChange(ChangeEvent event) {
-				GWT.log("edit todo");
+			public void onValueChange(ValueChangeEvent<String> event) {
+				Todo todo = todoTextField.get(event.getSource());
+				GWT.log("edit todo. New value: " + event.getValue() + ". It was: " + todo.getMemento());
 			}
 		};
 	}
@@ -92,5 +108,9 @@ public class TodoListView implements IsWidget {
 				GWT.log("click remove");
 			}
 		};
+	}
+
+	public void setEventBus(EventBus eventBus) {
+		this.eventBus = eventBus;
 	}
 }
