@@ -24,4 +24,20 @@ public class UpdateTodoTest {
 		updateTodo.reduce(tlm , data );
 		Assert.assertNull(tlm);
 	}
+	
+	@Test
+	public void updateTodoDoesNothingIfDataIsNull() throws TodoListException {
+		TodoListModel expected = getModelWithSomeTodo();
+		Object data = null;
+		TodoListModel actual = updateTodo.reduce(getModelWithSomeTodo(), data);
+		Assert.assertEquals(expected, actual);
+	}
+	
+	private TodoListModel getModelWithSomeTodo() {
+		TodoListModel tlm = new TodoListModel();
+		tlm.getTodoList().add(new Todo().setMemento("something 1."));
+		tlm.getTodoList().add(new Todo().setMemento("something 2."));
+		tlm.getTodoList().add(new Todo().setMemento("something 3."));
+		return tlm;
+	}
 }

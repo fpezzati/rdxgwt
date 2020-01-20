@@ -1,10 +1,10 @@
 package edu.pezzati.rdxgwt.client.todo;
 
 import java.io.Serializable;
+import java.util.Objects;
 
-import com.google.gwt.thirdparty.guava.common.base.Objects;
 
-public class Todo implements Serializable, Cloneable {
+public class Todo implements Serializable {
 
 	private static final long serialVersionUID = -5520325283377072191L;
 	private String memento;
@@ -40,10 +40,5 @@ public class Todo implements Serializable, Cloneable {
 		} else if (!memento.equals(other.memento))
 			return false;
 		return true;
-	}
-
-	@Override
-	public Todo clone() throws CloneNotSupportedException {
-		return new Todo().setMemento(this.getMemento());
 	}
 }

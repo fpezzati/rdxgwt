@@ -7,7 +7,7 @@ public class UpdateTodo implements TodoReducer {
 
 	@Override
 	public TodoListModel reduce(TodoListModel model, Object data) throws TodoListException {
-		// TODO Auto-generated method stub
+		if(model == null || model.getTodoList() == null || data == null) return model;
 		return null;
 	}
 

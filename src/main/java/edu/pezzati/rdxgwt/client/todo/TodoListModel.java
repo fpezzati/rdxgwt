@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
-public class TodoListModel implements Cloneable, Serializable {
+public class TodoListModel implements Serializable {
 
 	private static final long serialVersionUID = 4787325855591319709L;
 	private Collection<Todo> todoList;
@@ -42,14 +42,5 @@ public class TodoListModel implements Cloneable, Serializable {
 		} else if (!todoList.equals(other.todoList))
 			return false;
 		return true;
-	}
-
-	@Override
-	public TodoListModel clone() throws CloneNotSupportedException {
-		TodoListModel tlm = new TodoListModel();
-		for(Todo todo : this.getTodoList()) {
-			tlm.getTodoList().add(todo.clone());
-		}
-		return tlm;
 	}
 }
