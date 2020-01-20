@@ -3,10 +3,13 @@ package edu.pezzati.rdxgwt.client.todo;
 import com.google.gwt.event.shared.GwtEvent;
 
 public abstract class TodoListEvent extends GwtEvent<TodoListEventHandler> {
+	
+
+	public static final Type<TodoListEventHandler> TYPE = new Type<TodoListEventHandler>();
 
 	@Override
 	public Type<TodoListEventHandler> getAssociatedType() {
-		return new Type<TodoListEventHandler>();
+		return TYPE;
 	}
 
 	@Override

@@ -61,8 +61,10 @@ public class UpdateTodoTest {
 	@Test
 	public void ifThereIsAMatchBetweenGivenTodoAndATodoInModelUpdateTodoSubstitutesTheTodoInModelWithTheGivenOne() throws TodoListException {
 		TodoListModel expected = getModelWithUpdatedTodo();
-		Todo[] data = { new Todo().setMemento("something 2."), new Todo().setMemento("brand new!")};
-		TodoListModel actual = updateTodo.reduce(getModelWithSomeTodo(), data);
+		TodoListModel given = getModelWithSomeTodo();
+		Todo todoToUpdate = findTodoByMemento("something 2.", given);
+		Todo[] data = { todoToUpdate, new Todo().setMemento("brand new!")};
+		TodoListModel actual = updateTodo.reduce(given, data);
 		Assert.assertEquals(expected, actual);
 	}
 	
@@ -86,5 +88,12 @@ public class UpdateTodoTest {
 		}
 		tlm.setTodoList(todos);
 		return tlm;
+	}
+	
+	private Todo findTodoByMemento(String memento, TodoListModel given) {
+		for(Todo todo : given.getTodoList()) {
+			if(todo.getMemento().equals(memento)) return todo;
+		}
+		return null;
 	}
 }

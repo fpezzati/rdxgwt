@@ -16,7 +16,8 @@ public class UpdateTodo implements TodoReducer {
 		if(!(data instanceof Todo[]) || ((Todo[])data).length < 2) throw new TodoListInvalidData();
 		Collection<Todo> todos = new ArrayList<Todo>();
 		for(Todo todo : model.getTodoList()) {
-			if(todo.equals(((Todo[])data)[0])) {
+//			if(todo.equals(((Todo[])data)[0])) {
+			if(todo == ((Todo[])data)[0]) {
 				todos.add(((Todo[])data)[1]);
 			} else {
 				todos.add(todo);

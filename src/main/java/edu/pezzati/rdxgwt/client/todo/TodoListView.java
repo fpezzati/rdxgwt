@@ -24,10 +24,12 @@ public class TodoListView implements IsWidget {
 	 * Helps finding which {@link Todo} object was edited in the {@link TextBox} widget.
 	 */
 	private Map<TextBox, Todo> todoTextField;
+	private Map<Button, Todo> todoButton;
 	private EventBus eventBus;
 	
 	public TodoListView() {
 		todoTextField = new HashMap<>();
+		todoButton = new HashMap<>();
 	}
 
 	@Override
@@ -70,6 +72,7 @@ public class TodoListView implements IsWidget {
 			todoTable.setWidget(todoTable.getRowCount(), 0, mementoField);
 			todoTable.setWidget(todoTable.getRowCount(), 1, removeButton);
 			todoTextField.put(mementoField, todo);
+			todoButton.put(removeButton, todo);
 		}
 	}
 	
@@ -78,6 +81,17 @@ public class TodoListView implements IsWidget {
 			@Override
 			public void onClick(ClickEvent event) {
 				GWT.log("click add");
+				eventBus.fireEvent(new TodoListEvent() {
+					@Override
+					public String getType() {
+						return "add-todo";
+					}
+
+					@Override
+					public Object getData() {
+						return getNewTodo();
+					}
+				});
 			}
 		};
 	}
@@ -87,6 +101,17 @@ public class TodoListView implements IsWidget {
 			@Override
 			public void onClick(ClickEvent event) {
 				GWT.log("click clear");
+				eventBus.fireEvent(new TodoListEvent() {
+					@Override
+					public String getType() {
+						return "clear-list";
+					}
+
+					@Override
+					public Object getData() {
+						return null;
+					}
+				});
 			}
 		};
 	}
@@ -95,8 +120,21 @@ public class TodoListView implements IsWidget {
 		return new ValueChangeHandler<String>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<String> event) {
-				Todo todo = todoTextField.get(event.getSource());
-				GWT.log("edit todo. New value: " + event.getValue() + ". It was: " + todo.getMemento());
+				Todo oldTodo = todoTextField.get(event.getSource());
+				Todo newTodo = new Todo();
+				newTodo.setMemento(event.getValue());
+				GWT.log("edit todo. New value: " + event.getValue() + ". It was: " + oldTodo.getMemento());
+				eventBus.fireEvent(new TodoListEvent() {
+					@Override
+					public String getType() {
+						return "update-todo";
+					}
+
+					@Override
+					public Object getData() {
+						return new Todo[] { oldTodo, newTodo };
+					}
+				});
 			}
 		};
 	}
@@ -106,8 +144,25 @@ public class TodoListView implements IsWidget {
 			@Override
 			public void onClick(ClickEvent event) {
 				GWT.log("click remove");
+				eventBus.fireEvent(new TodoListEvent() {
+					@Override
+					public String getType() {
+						return "remove-todo";
+					}
+
+					@Override
+					public Object getData() {
+						return todoButton.get(event.getSource());
+					}
+				});
 			}
 		};
+	}
+	
+	private Todo getNewTodo() {
+		Todo todo = new Todo();
+		todo.setMemento("new!");
+		return todo;
 	}
 
 	public void setEventBus(EventBus eventBus) {
