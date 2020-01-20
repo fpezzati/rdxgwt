@@ -11,6 +11,10 @@ public class Todo implements Serializable {
 	
 	public Todo() {}
 
+	public Todo(Todo todo) {
+		this.memento = todo.memento;
+	}
+
 	public String getMemento() {
 		return memento;
 	}

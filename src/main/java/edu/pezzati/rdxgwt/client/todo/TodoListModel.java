@@ -14,6 +14,13 @@ public class TodoListModel implements Serializable {
 		todoList = new ArrayList<Todo>();
 	}
 	
+	public TodoListModel(TodoListModel todoListModel) {
+		this.todoList = new ArrayList<Todo>();
+		for(Todo todo : todoListModel.todoList) {
+			this.todoList.add(new Todo(todo));
+		}
+	}
+
 	public Collection<Todo> getTodoList() {
 		return todoList;
 	}

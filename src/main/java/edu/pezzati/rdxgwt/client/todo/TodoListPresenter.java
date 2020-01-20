@@ -15,7 +15,7 @@ public class TodoListPresenter {
 	private EventBus eventbus;
 	private TodoListModel model;
 	private TodoListView view;
-
+	
 	public TodoListPresenter() {
 		setReducers(new HashMap<String, TodoReducer>());
 	}
