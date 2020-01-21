@@ -56,28 +56,28 @@ public class RemoveTodoTest {
 	@Test
 	public void removeTodoDoesNothingWhenGivenTodoDoesNotMatchWithAnyTodoInModel() throws TodoListException {
 		TodoListModel expected = getModelWithSomeTodos();
-		TodoListModel actual = removeTodo.reduce(getModelWithSomeTodos(), new Todo().setMemento("Not my note!"));
+		TodoListModel actual = removeTodo.reduce(getModelWithSomeTodos(), new Todo().setId("4").setMemento("Not my note!"));
 		Assert.assertEquals(expected, actual);
 	}
 	
 	@Test
 	public void givenATodoRemoveTodoDeleteTheTodoInModelThatMatchesWithTheGivenOne() throws TodoListException {
 		TodoListModel expected = getModelWithSomeLessTodos();
-		TodoListModel actual = removeTodo.reduce(getModelWithSomeTodos(), new Todo().setMemento("not so important thing."));
+		TodoListModel actual = removeTodo.reduce(getModelWithSomeTodos(), new Todo().setId("2").setMemento("not so important thing."));
 		Assert.assertEquals(expected, actual);
 	}
 
 	private TodoListModel getModelWithSomeTodos() {
 		TodoListModel tlm = new TodoListModel();
-		tlm.getTodoList().add(new Todo().setMemento("remember this."));
-		tlm.getTodoList().add(new Todo().setMemento("not so important thing."));
-		tlm.getTodoList().add(new Todo().setMemento("son's birthday party tomorrow."));
+		tlm.getTodoList().add(new Todo().setId("1").setMemento("remember this."));
+		tlm.getTodoList().add(new Todo().setId("2").setMemento("not so important thing."));
+		tlm.getTodoList().add(new Todo().setId("3").setMemento("son's birthday party tomorrow."));
 		return tlm;
 	}
 	
 	private TodoListModel getModelWithSomeLessTodos() {
 		TodoListModel tlm = getModelWithSomeTodos();
-		tlm.getTodoList().remove(new Todo().setMemento("not so important thing."));
+		tlm.getTodoList().remove(new Todo().setId("2").setMemento("not so important thing."));
 		return tlm;
 	}
 }

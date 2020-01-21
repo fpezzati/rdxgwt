@@ -17,6 +17,8 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.pezzati.rdxgwt.client.todo.util.UUID4;
+
 public class TodoListView implements IsWidget {
 
 	private FlexTable todoTable;
@@ -123,6 +125,7 @@ public class TodoListView implements IsWidget {
 			public void onValueChange(ValueChangeEvent<String> event) {
 				Todo oldTodo = todoTextField.get(event.getSource());
 				Todo newTodo = new Todo();
+				newTodo.setId(UUID4.generate());
 				newTodo.setMemento(event.getValue());
 				GWT.log("edit todo. New value: " + event.getValue() + ". It was: " + oldTodo.getMemento());
 				eventBus.fireEvent(new TodoListEvent() {
@@ -162,6 +165,7 @@ public class TodoListView implements IsWidget {
 	
 	private Todo getNewTodo() {
 		Todo todo = new Todo();
+		todo.setId(UUID4.generate());
 		todo.setMemento("new!");
 		return todo;
 	}

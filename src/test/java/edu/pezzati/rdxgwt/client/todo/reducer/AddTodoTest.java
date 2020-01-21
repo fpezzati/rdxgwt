@@ -55,22 +55,22 @@ public class AddTodoTest {
 	@Test
 	public void addTodoAddNewTodoToTheModelsTodoList() throws TodoListException {
 		TodoListModel expected = getSomeEnrichedTodoList();
-		Object data = new Todo().setMemento("New one to remember!");
+		Object data = new Todo().setId("4").setMemento("New one to remember!");
 		TodoListModel actual = addTodo.reduce(getSomeTodoList(), data);
 		Assert.assertEquals(expected, actual);
 	}
 
 	private TodoListModel getSomeTodoList() {
 		TodoListModel tlm = new TodoListModel();
-		tlm.getTodoList().add(new Todo().setMemento("remember this."));
-		tlm.getTodoList().add(new Todo().setMemento("and this."));
-		tlm.getTodoList().add(new Todo().setMemento("and this too."));
+		tlm.getTodoList().add(new Todo().setId("1").setMemento("remember this."));
+		tlm.getTodoList().add(new Todo().setId("2").setMemento("and this."));
+		tlm.getTodoList().add(new Todo().setId("3").setMemento("and this too."));
 		return tlm;
 	}
 	
 	private TodoListModel getSomeEnrichedTodoList() {
 		TodoListModel tlm = getSomeTodoList();
-		tlm.getTodoList().add(new Todo().setMemento("New one to remember!"));
+		tlm.getTodoList().add(new Todo().setId("4").setMemento("New one to remember!"));
 		return tlm;
 	}
 }

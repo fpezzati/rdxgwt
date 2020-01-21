@@ -53,7 +53,7 @@ public class UpdateTodoTest {
 	@Test
 	public void ifThereIsNoMatchBetweenGivenTodoAndModelTodoListUpdateTodoDoesNothing() throws TodoListException {
 		TodoListModel expected = getModelWithSomeTodo();
-		Todo[] data = { new Todo().setMemento("something 5."), new Todo().setMemento("brand new!")};
+		Todo[] data = { new Todo().setId("5").setMemento("something 5."), new Todo().setId("5").setMemento("brand new!")};
 		TodoListModel actual = updateTodo.reduce(getModelWithSomeTodo(), data);
 		Assert.assertEquals(expected, actual);
 	}
@@ -63,16 +63,16 @@ public class UpdateTodoTest {
 		TodoListModel expected = getModelWithUpdatedTodo();
 		TodoListModel given = getModelWithSomeTodo();
 		Todo todoToUpdate = findTodoByMemento("something 2.", given);
-		Todo[] data = { todoToUpdate, new Todo().setMemento("brand new!")};
+		Todo[] data = { todoToUpdate, new Todo().setId("2").setMemento("brand new!")};
 		TodoListModel actual = updateTodo.reduce(given, data);
 		Assert.assertEquals(expected, actual);
 	}
 	
 	private TodoListModel getModelWithSomeTodo() {
 		TodoListModel tlm = new TodoListModel();
-		tlm.getTodoList().add(new Todo().setMemento("something 1."));
-		tlm.getTodoList().add(new Todo().setMemento("something 2."));
-		tlm.getTodoList().add(new Todo().setMemento("something 3."));
+		tlm.getTodoList().add(new Todo().setId("1").setMemento("something 1."));
+		tlm.getTodoList().add(new Todo().setId("2").setMemento("something 2."));
+		tlm.getTodoList().add(new Todo().setId("3").setMemento("something 3."));
 		return tlm;
 	}
 	
@@ -80,8 +80,8 @@ public class UpdateTodoTest {
 		TodoListModel tlm = getModelWithSomeTodo();
 		Collection<Todo> todos = new ArrayList<Todo>();
 		for(Todo todo : tlm.getTodoList()) {
-			if(todo.equals(new Todo().setMemento("something 2."))) {
-				todos.add(new Todo().setMemento("brand new!"));
+			if(todo.equals(new Todo().setId("2").setMemento("something 2."))) {
+				todos.add(new Todo().setId("2").setMemento("brand new!"));
 			} else {
 				todos.add(todo);
 			}
