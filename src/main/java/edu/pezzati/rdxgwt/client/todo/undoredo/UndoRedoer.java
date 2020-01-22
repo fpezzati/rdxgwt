@@ -1,4 +1,4 @@
-package edu.pezzati.rdxgwt.client.todo.util;
+package edu.pezzati.rdxgwt.client.todo.undoredo;
 
 import java.util.LinkedList;
 import java.util.Map;
@@ -23,4 +23,6 @@ public interface UndoRedoer {
 	TodoListModel popElementFromQueue(TodoListModel model, TodoListEvent pop) throws TodoListException;
 
 	Map<String, TodoReducer> getReducers();
+
+	TodoListModel undoAboutSteps(int i) throws TodoListException;
 }

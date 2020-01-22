@@ -1,4 +1,4 @@
-package edu.pezzati.rdxgwt.client.todo.util;
+package edu.pezzati.rdxgwt.client.todo.undoredo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +20,8 @@ import edu.pezzati.rdxgwt.client.todo.reducer.RemoveTodo;
 import edu.pezzati.rdxgwt.client.todo.reducer.TodoReducer;
 import edu.pezzati.rdxgwt.client.todo.reducer.UpdateTodo;
 import edu.pezzati.rdxgwt.client.todo.reducer.exception.TodoListException;
+import edu.pezzati.rdxgwt.client.todo.undoredo.SimpleUndoRedoer;
+import edu.pezzati.rdxgwt.client.todo.undoredo.UndoRedoer;
 
 public class SimpleUndoRedoerTest {
 
@@ -84,6 +86,41 @@ public class SimpleUndoRedoerTest {
 		Assert.assertEquals(expectedModel, unRe.getModel());
 	}
 	
+	@Test
+	public void whenAskedUndoStepsNumberIsLesserThanZeroUndoRedoerDoesNothing() throws TodoListException {
+		unRe.setEventQueueMaxSize(5);
+		unRe.getReducers().putAll(getReducers());
+		unRe.setModel(getSimpleTodoListModel());
+		unRe.getEventQueue().addAll(getTodoListEvents());
+		TodoListModel expected = new TodoListModel(getSimpleTodoListModel());
+		expected = applyEventToModel(applyEventToModel(applyEventToModel(expected, getReducers(), getTodoListEvents().get(0)), getReducers(), getTodoListEvents().get(1)), getReducers(), getTodoListEvents().get(2));
+		TodoListModel actual = unRe.undoAboutSteps(-2);
+		Assert.assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void whenAskedUndoStepsNumberIsGreaterThanEventQueueSizeUndoRedoerStepsAsQueueHasEvents() throws TodoListException {
+		unRe.setEventQueueMaxSize(5);
+		unRe.getReducers().putAll(getReducers());
+		unRe.setModel(getSimpleTodoListModel());
+		unRe.getEventQueue().addAll(getTodoListEvents());
+		TodoListModel expected = getSimpleTodoListModel();
+		TodoListModel actual = unRe.undoAboutSteps(8);
+		Assert.assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void whenAskedUndoRedoerStepsAsUndoStepsNumberAsksFor() throws TodoListException {
+		unRe.setEventQueueMaxSize(5);
+		unRe.getReducers().putAll(getReducers());
+		unRe.setModel(getSimpleTodoListModel());
+		unRe.getEventQueue().addAll(getTodoListEvents());
+		TodoListModel expected = new TodoListModel(getSimpleTodoListModel());
+		expected = applyEventToModel(expected, getReducers(), getTodoListEvents().get(0));
+		TodoListModel actual = unRe.undoAboutSteps(2);
+		Assert.assertEquals(expected, actual);
+	}
+	
 	private boolean checkEventsAreTheSame(Collection<TodoListEvent> expected, Collection<TodoListEvent> actual) {
 		if(expected.size() != actual.size()) return false;
 		List<TodoListEvent> expectedQueueAsList = new ArrayList<TodoListEvent>(expected);
@@ -111,6 +148,10 @@ public class SimpleUndoRedoerTest {
 		TodoListModel tlm = getSimpleTodoListModel();
 		tlm.getTodoList().add(new Todo().setMemento("add 1."));
 		return tlm;
+	}
+	
+	private TodoListModel applyEventToModel(TodoListModel model, Map<String, TodoReducer> reducers, TodoListEvent event) throws TodoListException {
+		return reducers.get(event.getType()).reduce(model, event.getData());
 	}
 	
 	private List<TodoListEvent> getTodoListEvents() {

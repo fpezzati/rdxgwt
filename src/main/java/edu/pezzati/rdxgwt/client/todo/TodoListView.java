@@ -18,6 +18,8 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.pezzati.rdxgwt.client.todo.undoredo.UndoRedoEvent;
+
 public class TodoListView implements IsWidget {
 
 	private FlexTable todoTable;
@@ -27,6 +29,7 @@ public class TodoListView implements IsWidget {
 	private Map<TextBox, Todo> todoTextField;
 	private Map<Button, Todo> todoButton;
 	private EventBus eventBus;
+	private int steps;
 	
 	public TodoListView() {
 		todoTextField = new HashMap<>();
@@ -48,12 +51,18 @@ public class TodoListView implements IsWidget {
 		add.addClickHandler(getAddButtonClickHandler());
 		Button clear = new Button("clear");
 		clear.addClickHandler(getClearButtonClickHandler());
+		Button stepBack = new Button("<");
+		stepBack.addClickHandler(getStepBackClickHandler());
+		Button stepForward = new Button(">");
+		stepForward.addClickHandler(getStepForwardClickHandler());
 		VerticalPanel leftPanel = new VerticalPanel();
 		leftPanel.add(todoTable);
 		leftPanel.addStyleName("leftPanel");
 		VerticalPanel rightPanel = new VerticalPanel();
 		rightPanel.add(add);
 		rightPanel.add(clear);
+		rightPanel.add(stepBack);
+		rightPanel.add(stepForward);
 		rightPanel.addStyleName("rightPanel");
 		basePanel.add(leftPanel);
 		basePanel.add(rightPanel);
@@ -112,6 +121,38 @@ public class TodoListView implements IsWidget {
 					@Override
 					public Object getData() {
 						return null;
+					}
+				});
+			}
+		};
+	}
+	
+	private ClickHandler getStepBackClickHandler() {
+		return new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				steps--;
+				GWT.log("stepping back.");
+				eventBus.fireEvent(new UndoRedoEvent() {
+					@Override
+					public int steps() {
+						return steps;
+					}
+				});
+			}
+		};
+	}
+
+	private ClickHandler getStepForwardClickHandler() {
+		return new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				steps++;
+				GWT.log("stepping forward.");
+				eventBus.fireEvent(new UndoRedoEvent() {
+					@Override
+					public int steps() {
+						return steps;
 					}
 				});
 			}

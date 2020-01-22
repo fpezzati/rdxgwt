@@ -1,4 +1,4 @@
-package edu.pezzati.rdxgwt.client.todo.util;
+package edu.pezzati.rdxgwt.client.todo.undoredo;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -67,5 +67,14 @@ public class SimpleUndoRedoer implements UndoRedoer {
 	@Override
 	public Map<String, TodoReducer> getReducers() {
 		return reducers;
+	}
+
+	@Override
+	public TodoListModel undoAboutSteps(int steps) throws TodoListException {
+		TodoListModel tlm = new TodoListModel(getModel());
+		for(int i=0; i<(queue.size() - steps) && i<queue.size(); i++) {
+			tlm = reducers.get(queue.get(i).getType()).reduce(tlm, queue.get(i).getData());
+		}
+		return tlm;
 	}
 }

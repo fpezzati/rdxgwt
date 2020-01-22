@@ -8,6 +8,10 @@ import com.google.gwt.event.shared.EventBus;
 
 import edu.pezzati.rdxgwt.client.todo.reducer.TodoReducer;
 import edu.pezzati.rdxgwt.client.todo.reducer.exception.TodoListException;
+import edu.pezzati.rdxgwt.client.todo.undoredo.SimpleUndoRedoer;
+import edu.pezzati.rdxgwt.client.todo.undoredo.UndoRedoEvent;
+import edu.pezzati.rdxgwt.client.todo.undoredo.UndoRedoEventHandler;
+import edu.pezzati.rdxgwt.client.todo.undoredo.UndoRedoer;
 
 public class TodoListPresenter {
 	
@@ -15,9 +19,12 @@ public class TodoListPresenter {
 	private EventBus eventbus;
 	private TodoListModel model;
 	private TodoListView view;
+	private UndoRedoer undoRedo;
 	
 	public TodoListPresenter() {
 		setReducers(new HashMap<String, TodoReducer>());
+		undoRedo = new SimpleUndoRedoer();
+		undoRedo.setEventQueueMaxSize(10);
 	}
 
 	public Map<String, TodoReducer> getReducers() {
@@ -46,10 +53,22 @@ public class TodoListPresenter {
 				}
 			}
 		});
+		this.eventbus.addHandler(UndoRedoEvent.TYPE, new UndoRedoEventHandler() {
+			@Override
+			public void onChange(UndoRedoEvent event) {
+				GWT.log("Undo about steps: " + event.steps());
+				try {
+					view.refresh(undoRedo.undoAboutSteps(event.steps()));
+				} catch (TodoListException e) {
+					GWT.log(e.getMessage());
+				}
+			}
+		});
 	}
 	
 	public void setModel(TodoListModel model) {
 		this.model = model;
+		undoRedo.setModel(model);
 	}
 
 	public void setView(TodoListView view) {
