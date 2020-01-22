@@ -124,7 +124,7 @@ public class TodoListView implements IsWidget {
 			public void onValueChange(ValueChangeEvent<String> event) {
 				Todo oldTodo = todoTextField.get(event.getSource());
 				Todo newTodo = new Todo();
-				newTodo.setId(DOM.createUniqueId());
+				newTodo.setUuid(DOM.createUniqueId());
 				newTodo.setMemento(event.getValue());
 				GWT.log("edit todo. New value: " + event.getValue() + ". It was: " + oldTodo.getMemento());
 				eventBus.fireEvent(new TodoListEvent() {
@@ -164,7 +164,7 @@ public class TodoListView implements IsWidget {
 	
 	private Todo getNewTodo() {
 		Todo todo = new Todo();
-		todo.setId(DOM.createUniqueId());
+		todo.setUuid(DOM.createUniqueId());
 		todo.setMemento("new!");
 		return todo;
 	}

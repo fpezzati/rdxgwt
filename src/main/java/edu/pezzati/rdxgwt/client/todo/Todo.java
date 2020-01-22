@@ -6,7 +6,7 @@ import java.io.Serializable;
 public class Todo implements Serializable {
 
 	private static final long serialVersionUID = -5520325283377072191L;
-	private String id;
+	private String uuid;
 	private String memento;
 	
 	public Todo() {
@@ -14,16 +14,16 @@ public class Todo implements Serializable {
 	}
 
 	public Todo(Todo todo) {
-		this.setId(todo.getId());
+		this.setUuid(todo.getUuid());
 		this.memento = todo.memento;
 	}
 
-	public String getId() {
-		return id;
+	public String getUuid() {
+		return uuid;
 	}
 
-	public Todo setId(String id) {
-		this.id = id;
+	public Todo setUuid(String id) {
+		this.uuid = id;
 		return this;
 	}
 
@@ -40,7 +40,7 @@ public class Todo implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
+		result = prime * result + ((getUuid() == null) ? 0 : getUuid().hashCode());
 		result = prime * result + ((memento == null) ? 0 : memento.hashCode());
 		return result;
 	}
@@ -54,10 +54,10 @@ public class Todo implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Todo other = (Todo) obj;
-		if (getId() == null) {
-			if (other.getId() != null)
+		if (getUuid() == null) {
+			if (other.getUuid() != null)
 				return false;
-		} else if (!getId().equals(other.getId()))
+		} else if (!getUuid().equals(other.getUuid()))
 			return false;
 		if (memento == null) {
 			if (other.memento != null)
