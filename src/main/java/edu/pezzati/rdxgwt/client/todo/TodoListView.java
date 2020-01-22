@@ -9,6 +9,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -16,8 +17,6 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-
-import edu.pezzati.rdxgwt.client.todo.util.UUID4;
 
 public class TodoListView implements IsWidget {
 
@@ -125,7 +124,7 @@ public class TodoListView implements IsWidget {
 			public void onValueChange(ValueChangeEvent<String> event) {
 				Todo oldTodo = todoTextField.get(event.getSource());
 				Todo newTodo = new Todo();
-				newTodo.setId(UUID4.generate());
+				newTodo.setId(DOM.createUniqueId());
 				newTodo.setMemento(event.getValue());
 				GWT.log("edit todo. New value: " + event.getValue() + ". It was: " + oldTodo.getMemento());
 				eventBus.fireEvent(new TodoListEvent() {
@@ -165,7 +164,7 @@ public class TodoListView implements IsWidget {
 	
 	private Todo getNewTodo() {
 		Todo todo = new Todo();
-		todo.setId(UUID4.generate());
+		todo.setId(DOM.createUniqueId());
 		todo.setMemento("new!");
 		return todo;
 	}
